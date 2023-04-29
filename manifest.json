@@ -1,15 +1,15 @@
 {
     "name": "STR Extensions",
-    "description": "Base Level Extension",
+    "description": "Jira extension that helps QA describe bugs faster",
     "version": "1.0",
     "manifest_version": 3,
     "action": {
-      "default_popup": "hello.html",
-      "default_icon": "qa_logo.png"
+      "default_popup": "html/popup.html",
+      "default_icon": "images/logo_32"
     },
     "content_scripts": [
       {
-        "js": ["popup.js"],
+        "js": ["js/popup.js"],
         "matches": [
           "<all_urls>"
         ],
