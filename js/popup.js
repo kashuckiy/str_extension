@@ -3,17 +3,17 @@ var des_str = document.getElementById("des_str");
 var all = document.getElementById("all");
 var last_text = document.getElementById("last_text");
 
-function track (selector) {
-  var elements =  selector.querySelector("#tinymce").childNodes;
+function track(selector) {
+  var elements = selector.querySelector("#tinymce").childNodes;
   var lastText = [];
-  for(let i  = 0; i<elements.length; i++){
+  for (let i = 0; i < elements.length; i++) {
     lastText.push(elements[i].outerHTML);
   }
   console.log(lastText.join(''));
   localStorage.setItem('test', lastText.join(''));
 }
 
-str.addEventListener("click", async(e) => {
+str.addEventListener("click", async (e) => {
   chrome.tabs.update({}, async (tab) => {
     chrome.scripting.executeScript({
       target: { tabId: tab.id },
@@ -24,24 +24,12 @@ str.addEventListener("click", async(e) => {
 
         if (iframeDocument.querySelector("#tinymce") !== null) {
           iframeDocument.querySelector("#tinymce").innerHTML = text_str
-
-          // start tracked last text
-          iframeDocument.oninput = function() {
-            var elements =  iframeDocument.querySelector("#tinymce").childNodes;
-            var lastText = [];
-            for(let i  = 0; i<elements.length; i++){
-              lastText.push(elements[i].outerHTML);
-            }
-            console.log(lastText.join(''));
-            localStorage.setItem('test', lastText.join(''));
-          }
-          // finish
-
-          
+          iframeDocument.oninput = () => track(iframeDocument);
         } else {
           var lastFocusedElement = document.activeElement;
           var lastIframeDocument = lastFocusedElement.contentDocument || iframe.contentWindow.document;
           lastIframeDocument.querySelector("#tinymce").innerHTML = text_str;
+          lastIframeDocument.oninput = () => track(lastIframeDocument);
         }
 
       }
@@ -60,24 +48,12 @@ des_str.addEventListener("click", function () {
 
         if (iframeDocument.querySelector("#tinymce") !== null) {
           iframeDocument.querySelector("#tinymce").innerHTML = text_des_str
-
-                    // start tracked last text
-                    iframeDocument.oninput = function() {
-                      var elements =  iframeDocument.querySelector("#tinymce").childNodes;
-                      var lastText = [];
-                      for(let i  = 0; i<elements.length; i++){
-                        lastText.push(elements[i].outerHTML);
-                      }
-                      console.log(lastText.join(''));
-                      localStorage.setItem('test', lastText.join(''));
-                    }
-                    // finish
-
-
+          iframeDocument.oninput = () => track(iframeDocument);
         } else {
           var lastFocusedElement = document.activeElement;
           var lastIframeDocument = lastFocusedElement.contentDocument || iframe.contentWindow.document;
           lastIframeDocument.querySelector("#tinymce").innerHTML = text_des_str;
+          lastIframeDocument.oninput = () => track(lastIframeDocument);
         }
 
       }
@@ -96,24 +72,12 @@ all.addEventListener("click", function () {
 
         if (iframeDocument.querySelector("#tinymce") !== null) {
           iframeDocument.querySelector("#tinymce").innerHTML = text_all;
-
-                    // start tracked last text
-                    iframeDocument.oninput = function() {
-                      var elements =  iframeDocument.querySelector("#tinymce").childNodes;
-                      var lastText = [];
-                      for(let i  = 0; i<elements.length; i++){
-                        lastText.push(elements[i].outerHTML);
-                      }
-                      console.log(lastText.join(''));
-                      localStorage.setItem('test', lastText.join(''));
-                    }
-                    // finish
-
-                    
+          iframeDocument.oninput = () => track(iframeDocument);
         } else {
           var lastFocusedElement = document.activeElement;
           var lastIframeDocument = lastFocusedElement.contentDocument || iframe.contentWindow.document;
           lastIframeDocument.querySelector("#tinymce").innerHTML = text_all;
+          lastIframeDocument.oninput = () => track(lastIframeDocument);
         }
 
       }
