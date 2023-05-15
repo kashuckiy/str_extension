@@ -1,7 +1,7 @@
-var str = document.getElementById("str");
-var des_str = document.getElementById("des_str");
-var all = document.getElementById("all");
-var last_text = document.getElementById("last_text");
+var str = document.querySelector("#str");
+var des_str = document.querySelector("#des_str");
+var all = document.querySelector("#all");
+var last_text = document.querySelector("#last_text");
 
 function track(selector) {
   var elements = selector.querySelector("#tinymce").childNodes;
@@ -10,10 +10,10 @@ function track(selector) {
     lastText.push(elements[i].outerHTML);
   }
   console.log(lastText.join(''));
-  localStorage.setItem('test', lastText.join(''));
+  localStorage.setItem('lastText', lastText.join(''));
 }
 
-str.addEventListener("click", async (e) => {
+str.addEventListener("click", () => {
   chrome.tabs.update({}, async (tab) => {
     chrome.scripting.executeScript({
       target: { tabId: tab.id },
@@ -95,50 +95,14 @@ last_text.addEventListener("click", function () {
         var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
 
         if (iframeDocument.querySelector("#tinymce") !== null) {
-          iframeDocument.querySelector("#tinymce").innerHTML = localStorage.getItem('test')
+          iframeDocument.querySelector("#tinymce").innerHTML = localStorage.getItem('lastText')
         } else {
           var lastFocusedElement = document.activeElement;
           var lastIframeDocument = lastFocusedElement.contentDocument || iframe.contentWindow.document;
-          lastIframeDocument.querySelector("#tinymce").innerHTML = localStorage.getItem('test')
+          lastIframeDocument.querySelector("#tinymce").innerHTML = localStorage.getItem('lastText')
         }
 
       }
     });
   });
 });
-
-
-// chrome.tabs.update({}, async (tab) => {
-//   chrome.scripting.executeScript({
-//     target: { tabId: tab.id },
-//     function: () => {
-
-//       var iframe = document.querySelector('iframe');
-//       var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-
-//         iframeDocument.oninput = function() {
-//           var elements =  iframeDocument.querySelector("#tinymce").childNodes;
-//           var lastText = [];
-//           for(let i  = 0; i<elements.length; i++){
-//             lastText.push(elements[i].outerHTML);
-//           }
-//           console.log(lastText.join(''));
-
-//           // var lastText = elements.forEach(element => element.outerHTML);
-
-//           localStorage.setItem('test', lastText.join(''));
-
-//           // chrome.storage.local.set({ 'cusmon':  helo}).then(() => {
-//           //   console.log("Value is set to " + helo);
-//           // });
-
-//           // chrome.storage.local.get(['cusmon']).then((result) => {
-//           //   console.log("Value currently is " + result.key);
-//           // });
-
-//         };
-
-
-//     }
-//   });
-// });

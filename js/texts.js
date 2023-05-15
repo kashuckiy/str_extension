@@ -19,7 +19,7 @@ var text_des_str =
 var text_all =
   '<p><strong>Description</strong></p>' +
   '<p><br data-mce-bogus="1"></p>' +
-  '<p><strong>Preconditions</strong></p>' +
+  '<p><strong>Preconditions:</strong></p>' +
   '<p><br data-mce-bogus="1"></p>' +
   '<p><strong>Steps to reproduce:</strong></p>' +
   '<ol><li><br data-mce-bogus="1"></li></ol>' +

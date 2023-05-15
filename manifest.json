@@ -1,5 +1,5 @@
 {
-    "name": "STR Extensions",
+    "name": "STR Extension",
     "description": "Jira extension that helps QA describe bugs faster",
     "version": "1.0",
     "manifest_version": 3,
@@ -15,15 +15,15 @@
   },
     "content_scripts": [
       {
-        "js": ["js/popup.js", "js/texts.js", "js/service.js"],
+        "js": ["js/popup.js", "js/texts.js"],
         "matches": [
-          "<all_urls>"
+          "https://jira.atlas-iac.org/*"
         ],
         "run_at": "document_end"
       }
     ],
     "permissions": ["activeTab", "scripting",  "storage"],
     "host_permissions": [
-      "<all_urls>"
+      "https://jira.atlas-iac.org/*"
   ]
   }
