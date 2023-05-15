@@ -96,10 +96,12 @@ last_text.addEventListener("click", function () {
 
         if (iframeDocument.querySelector("#tinymce") !== null) {
           iframeDocument.querySelector("#tinymce").innerHTML = localStorage.getItem('lastText')
+          iframeDocument.oninput = () => track(iframeDocument);
         } else {
           var lastFocusedElement = document.activeElement;
           var lastIframeDocument = lastFocusedElement.contentDocument || iframe.contentWindow.document;
           lastIframeDocument.querySelector("#tinymce").innerHTML = localStorage.getItem('lastText')
+          lastIframeDocument.oninput = () => track(lastIframeDocument);
         }
 
       }
