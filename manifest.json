@@ -15,7 +15,7 @@
   },
     "content_scripts": [
       {
-        "js": ["js/popup.js", "js/texts.js"],
+        "js": ["js/popup.js", "js/texts.js", "js/service.js"],
         "matches": [
           "https://jira.atlas-iac.org/*"
         ],
