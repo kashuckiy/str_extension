@@ -29,3 +29,5 @@ var text_all =
   '<p><br data-mce-bogus="1"></p>' +
   '<p><strong>Additionals</strong></p>' +
   '<p><br data-mce-bogus="1"></p>'
+
+  var textarea_str = '*Steps to reproduce:*\n\n \n\n*Actual result*\n\n \n\n*Expected result*\n\n '
