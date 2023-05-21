@@ -3,14 +3,20 @@ const des_str = document.querySelector("#des_str");
 const all = document.querySelector("#all");
 const last_text = document.querySelector("#last_text");
 
-function track(selector) {
-    let elements = selector.querySelector("#tinymce").childNodes;
-    let lastText = [];
-    for (let i = 0; i < elements.length; i++) {
-        lastText.push(elements[i].outerHTML);
+function track(selector, activeTab) {
+    if (activeTab === "wysiwyg") {
+        let elements = selector.querySelector("#tinymce").childNodes;
+        let lastText = [];
+        for (let i = 0; i < elements.length; i++) {
+            lastText.push(elements[i].outerHTML);
+        }
+        console.log(lastText.join(''));
+        localStorage.setItem('lastText', lastText.join(''));
+    } else if (activeTab === "source"){
+        let getTextAreaText = selector.value
+        console.log(getTextAreaText);
+        localStorage.setItem('lastText', getTextAreaText);
     }
-    console.log(lastText.join(''));
-    localStorage.setItem('lastText', lastText.join(''));
 }
 
 function trackTextarea(selector) {
@@ -38,35 +44,58 @@ str.addEventListener("click", () => {
             target: {tabId: tab.id},
             function: () => {
 
-                let activeTab = getActiveTab();
-
-                if (activeTab === "wysiwyg") {
+                if (getActiveTab() === "wysiwyg") {
                     let iframe = document.querySelector('iframe');
                     let iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
 
                     if (iframeDocument.querySelector("#tinymce") !== null) {
-                        iframeDocument.querySelector("#tinymce").innerHTML = text_str
-                        iframeDocument.oninput = () => track(iframeDocument);
+                        iframeDocument.querySelector("#tinymce").innerHTML = text_str;
+                        window.AJS.flag({
+                            type: 'success',
+                            title: 'Успіх',
+                            close: 'auto'
+                        });
+                        iframeDocument.oninput = () => track(iframeDocument, getActiveTab());
+                        /* КОСТИЛЬ може з цього зроблю окрему функцію*/
+                        document.querySelector('[data-mode="source"]').addEventListener('click', ()=>{
+                            let getTextarea = document.querySelector("#description");
+                            if (getTextarea != null) {
+                                getTextarea.oninput = () => track(getTextarea, getActiveTab());
+                                console.log(textarea_str);
+                            } else {
+                                let getCommentTextarea = document.querySelector("#comment");
+                                getCommentTextarea.oninput = () => track(getCommentTextarea, getActiveTab());
+                                console.log(textarea_str)
+                            }
+                        })
+                        /* КІНЕЦЬ КОСТИЛЯ*/
                     } else {
                         let lastFocusedElement = document.activeElement;
                         let lastIframeDocument = lastFocusedElement.contentDocument || iframe.contentWindow.document;
                         lastIframeDocument.querySelector("#tinymce").innerHTML = text_str;
-                        lastIframeDocument.oninput = () => track(lastIframeDocument);
+                        lastIframeDocument.oninput = () => track(lastIframeDocument, getActiveTab());
                     }
 
                 } else {
                     let getTextarea = document.querySelector("#description");
                     if (getTextarea != null) {
                         getTextarea.value = textarea_str;
-                        getTextarea.oninput = () => trackTextarea(getTextarea);
+                        getTextarea.oninput = () => track(getTextarea, getActiveTab());
                         console.log(textarea_str);
+                        /* КОСТИЛЬ*/
+                        document.querySelector('[data-mode="wysiwyg"]').addEventListener('click', ()=>{
+                            let iframe = document.querySelector('iframe');
+                            let iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+                            iframeDocument.oninput = () => track(iframeDocument, getActiveTab());
+                        })
+                        /* КІНЕЦЬ КОСТИЛЯ*/
                     } else {
                         let getCommentTextarea = document.querySelector("#comment");
                         getCommentTextarea.value = textarea_str;
-                        getCommentTextarea.oninput = () => trackTextarea(getCommentTextarea);
+                        getCommentTextarea.oninput = () => track(getCommentTextarea, getActiveTab());
                         console.log(textarea_str)
                     }
-
+// end
                 }
 
             }
