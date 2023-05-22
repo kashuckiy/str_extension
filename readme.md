@@ -53,6 +53,9 @@ The third template by clicking on the button "All" looks like this:
 
 The functionality helps to restore the last description of the bug report, which is located in the "Description" field. If the pop-up window in the jira is buggy and the description of the error has not been saved, then by pressing just one button "Insert last description" you can completely restore all the data that the user entered in advance, even if he restarts the computer.
 
+#### !IMPORTANT
+    Text tracking only works after the user selects a template from the popup
+
 ## Usage
 
 To use the STR Extension, simply click on the extension icon in the browser toolbar. From there, users can choose to take insert description template or inserta latst description which has be saved
