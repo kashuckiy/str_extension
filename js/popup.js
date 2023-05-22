@@ -12,17 +12,11 @@ function track(selector, activeTab) {
         }
         console.log(lastText.join(''));
         localStorage.setItem('lastText', lastText.join(''));
-    } else if (activeTab === "source"){
+    } else if (activeTab === "source") {
         let getTextAreaText = selector.value
         console.log(getTextAreaText);
         localStorage.setItem('lastText', getTextAreaText);
     }
-}
-
-function trackTextarea(selector) {
-    let getTextAreaText = selector.value
-    console.log(getTextAreaText);
-    localStorage.setItem('lastText', getTextAreaText);
 }
 
 function getActiveTab() {
@@ -38,64 +32,78 @@ function getActiveTab() {
     return activeTab
 }
 
+function switchTabToSourceAndTrack() {
+    let getTextarea = document.querySelector("#description");
+    if (getTextarea != null) {
+        getTextarea.oninput = () => track(getTextarea, getActiveTab());
+        console.log(textarea_str);
+    } else {
+        let getCommentTextarea = document.querySelector("#comment");
+        getCommentTextarea.oninput = () => track(getCommentTextarea, getActiveTab());
+        console.log(textarea_str)
+    }
+}
+
+function switchTabToWysiwygAndTrack() {
+    const interval = setInterval(() => {
+        let iframe = document.activeElement;
+        if (iframe) {
+            // If element founded, execute script and clear interval
+            let iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+            clearInterval(interval);
+            iframeDocument.oninput = () => track(iframeDocument, getActiveTab());
+        }
+    }, 1000);
+}
+
 str.addEventListener("click", () => {
     chrome.tabs.update({}, async (tab) => {
         chrome.scripting.executeScript({
             target: {tabId: tab.id},
             function: () => {
-
+                /* Checking which tab the user is on || Wysiwyg tab*/
                 if (getActiveTab() === "wysiwyg") {
                     let iframe = document.querySelector('iframe');
                     let iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-
+                    /* Execute script from RapidBoard*/
                     if (iframeDocument.querySelector("#tinymce") !== null) {
                         iframeDocument.querySelector("#tinymce").innerHTML = text_str;
-                        window.AJS.flag({
-                            type: 'success',
-                            title: 'Успіх',
-                            close: 'auto'
-                        });
                         iframeDocument.oninput = () => track(iframeDocument, getActiveTab());
-                        /* КОСТИЛЬ може з цього зроблю окрему функцію*/
-                        document.querySelector('[data-mode="source"]').addEventListener('click', ()=>{
-                            let getTextarea = document.querySelector("#description");
-                            if (getTextarea != null) {
-                                getTextarea.oninput = () => track(getTextarea, getActiveTab());
-                                console.log(textarea_str);
-                            } else {
-                                let getCommentTextarea = document.querySelector("#comment");
-                                getCommentTextarea.oninput = () => track(getCommentTextarea, getActiveTab());
-                                console.log(textarea_str)
-                            }
-                        })
-                        /* КІНЕЦЬ КОСТИЛЯ*/
-                    } else {
+                        /* Tracking function when the user goes to the "Source" tab */
+                        document.querySelector('[data-mode="source"]').addEventListener('click', switchTabToSourceAndTrack)
+                    }
+                    /* Execute script from Dashboard which include lastFocusedElement*/
+                    else {
                         let lastFocusedElement = document.activeElement;
                         let lastIframeDocument = lastFocusedElement.contentDocument || iframe.contentWindow.document;
                         lastIframeDocument.querySelector("#tinymce").innerHTML = text_str;
                         lastIframeDocument.oninput = () => track(lastIframeDocument, getActiveTab());
+                        /* Tracking function when the user goes to the "Source" tab */
+                        document.querySelector('[data-mode="source"]').addEventListener('click', switchTabToSourceAndTrack)
                     }
+                }
 
-                } else {
+                /* Checking which tab the user is on || Source tab*/
+                else {
                     let getTextarea = document.querySelector("#description");
+                    /* Checking if the user is in a dialog window */
                     if (getTextarea != null) {
                         getTextarea.value = textarea_str;
                         getTextarea.oninput = () => track(getTextarea, getActiveTab());
                         console.log(textarea_str);
-                        /* КОСТИЛЬ*/
-                        document.querySelector('[data-mode="wysiwyg"]').addEventListener('click', ()=>{
-                            let iframe = document.querySelector('iframe');
-                            let iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-                            iframeDocument.oninput = () => track(iframeDocument, getActiveTab());
-                        })
-                        /* КІНЕЦЬ КОСТИЛЯ*/
-                    } else {
+                        /* Tracking function when the user goes to the "Wysiwyg" tab */
+                        document.querySelector('[data-mode="wysiwyg"]').addEventListener('click', switchTabToWysiwygAndTrack)
+                    }
+                    /* Checking if the user is in a comment window */
+                    else {
                         let getCommentTextarea = document.querySelector("#comment");
                         getCommentTextarea.value = textarea_str;
                         getCommentTextarea.oninput = () => track(getCommentTextarea, getActiveTab());
                         console.log(textarea_str)
+                        /* Tracking function when the user goes to the "Wysiwyg" tab */
+                        document.querySelector('[data-mode="wysiwyg"]').addEventListener('click', switchTabToWysiwygAndTrack)
                     }
-// end
+
                 }
 
             }
