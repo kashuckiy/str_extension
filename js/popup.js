@@ -111,23 +111,54 @@ str.addEventListener("click", () => {
     });
 });
 
-des_str.addEventListener("click", function () {
+des_str.addEventListener("click", () => {
     chrome.tabs.update({}, async (tab) => {
         chrome.scripting.executeScript({
             target: {tabId: tab.id},
             function: () => {
+                /* Checking which tab the user is on || Wysiwyg tab*/
+                if (getActiveTab() === "wysiwyg") {
+                    let iframe = document.querySelector('iframe');
+                    let iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+                    /* Execute script from RapidBoard*/
+                    if (iframeDocument.querySelector("#tinymce") !== null) {
+                        iframeDocument.querySelector("#tinymce").innerHTML = text_des_str;
+                        iframeDocument.oninput = () => track(iframeDocument, getActiveTab());
+                        /* Tracking function when the user goes to the "Source" tab */
+                        document.querySelector('[data-mode="source"]').addEventListener('click', switchTabToSourceAndTrack)
+                    }
+                    /* Execute script from Dashboard which include lastFocusedElement*/
+                    else {
+                        let lastFocusedElement = document.activeElement;
+                        let lastIframeDocument = lastFocusedElement.contentDocument || iframe.contentWindow.document;
+                        lastIframeDocument.querySelector("#tinymce").innerHTML = text_des_str;
+                        lastIframeDocument.oninput = () => track(lastIframeDocument, getActiveTab());
+                        /* Tracking function when the user goes to the "Source" tab */
+                        document.querySelector('[data-mode="source"]').addEventListener('click', switchTabToSourceAndTrack)
+                    }
+                }
 
-                var iframe = document.querySelector('iframe');
-                var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+                /* Checking which tab the user is on || Source tab*/
+                else {
+                    let getTextarea = document.querySelector("#description");
+                    /* Checking if the user is in a dialog window */
+                    if (getTextarea != null) {
+                        getTextarea.value = textarea_des_str;
+                        getTextarea.oninput = () => track(getTextarea, getActiveTab());
+                        console.log(textarea_des_str);
+                        /* Tracking function when the user goes to the "Wysiwyg" tab */
+                        document.querySelector('[data-mode="wysiwyg"]').addEventListener('click', switchTabToWysiwygAndTrack)
+                    }
+                    /* Checking if the user is in a comment window */
+                    else {
+                        let getCommentTextarea = document.querySelector("#comment");
+                        getCommentTextarea.value = textarea_des_str;
+                        getCommentTextarea.oninput = () => track(getCommentTextarea, getActiveTab());
+                        console.log(textarea_des_str)
+                        /* Tracking function when the user goes to the "Wysiwyg" tab */
+                        document.querySelector('[data-mode="wysiwyg"]').addEventListener('click', switchTabToWysiwygAndTrack)
+                    }
 
-                if (iframeDocument.querySelector("#tinymce") !== null) {
-                    iframeDocument.querySelector("#tinymce").innerHTML = text_des_str
-                    iframeDocument.oninput = () => track(iframeDocument);
-                } else {
-                    var lastFocusedElement = document.activeElement;
-                    var lastIframeDocument = lastFocusedElement.contentDocument || iframe.contentWindow.document;
-                    lastIframeDocument.querySelector("#tinymce").innerHTML = text_des_str;
-                    lastIframeDocument.oninput = () => track(lastIframeDocument);
                 }
 
             }
@@ -135,23 +166,54 @@ des_str.addEventListener("click", function () {
     });
 });
 
-all.addEventListener("click", function () {
+all.addEventListener("click", () => {
     chrome.tabs.update({}, async (tab) => {
         chrome.scripting.executeScript({
             target: {tabId: tab.id},
             function: () => {
+                /* Checking which tab the user is on || Wysiwyg tab*/
+                if (getActiveTab() === "wysiwyg") {
+                    let iframe = document.querySelector('iframe');
+                    let iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+                    /* Execute script from RapidBoard*/
+                    if (iframeDocument.querySelector("#tinymce") !== null) {
+                        iframeDocument.querySelector("#tinymce").innerHTML = text_all;
+                        iframeDocument.oninput = () => track(iframeDocument, getActiveTab());
+                        /* Tracking function when the user goes to the "Source" tab */
+                        document.querySelector('[data-mode="source"]').addEventListener('click', switchTabToSourceAndTrack)
+                    }
+                    /* Execute script from Dashboard which include lastFocusedElement*/
+                    else {
+                        let lastFocusedElement = document.activeElement;
+                        let lastIframeDocument = lastFocusedElement.contentDocument || iframe.contentWindow.document;
+                        lastIframeDocument.querySelector("#tinymce").innerHTML = text_all;
+                        lastIframeDocument.oninput = () => track(lastIframeDocument, getActiveTab());
+                        /* Tracking function when the user goes to the "Source" tab */
+                        document.querySelector('[data-mode="source"]').addEventListener('click', switchTabToSourceAndTrack)
+                    }
+                }
 
-                var iframe = document.querySelector('iframe');
-                var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+                /* Checking which tab the user is on || Source tab*/
+                else {
+                    let getTextarea = document.querySelector("#description");
+                    /* Checking if the user is in a dialog window */
+                    if (getTextarea != null) {
+                        getTextarea.value = textarea_all;
+                        getTextarea.oninput = () => track(getTextarea, getActiveTab());
+                        console.log(textarea_all);
+                        /* Tracking function when the user goes to the "Wysiwyg" tab */
+                        document.querySelector('[data-mode="wysiwyg"]').addEventListener('click', switchTabToWysiwygAndTrack)
+                    }
+                    /* Checking if the user is in a comment window */
+                    else {
+                        let getCommentTextarea = document.querySelector("#comment");
+                        getCommentTextarea.value = textarea_all;
+                        getCommentTextarea.oninput = () => track(getCommentTextarea, getActiveTab());
+                        console.log(textarea_all)
+                        /* Tracking function when the user goes to the "Wysiwyg" tab */
+                        document.querySelector('[data-mode="wysiwyg"]').addEventListener('click', switchTabToWysiwygAndTrack)
+                    }
 
-                if (iframeDocument.querySelector("#tinymce") !== null) {
-                    iframeDocument.querySelector("#tinymce").innerHTML = text_all;
-                    iframeDocument.oninput = () => track(iframeDocument);
-                } else {
-                    var lastFocusedElement = document.activeElement;
-                    var lastIframeDocument = lastFocusedElement.contentDocument || iframe.contentWindow.document;
-                    lastIframeDocument.querySelector("#tinymce").innerHTML = text_all;
-                    lastIframeDocument.oninput = () => track(lastIframeDocument);
                 }
 
             }
