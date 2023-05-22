@@ -12,7 +12,7 @@ function track(selector, activeTab) {
         }
         console.log(lastText.join(''));
         localStorage.setItem('lastText', lastText.join(''));
-    } else if (activeTab === "source"){
+    } else if (activeTab === "source") {
         let getTextAreaText = selector.value
         console.log(getTextAreaText);
         localStorage.setItem('lastText', getTextAreaText);
@@ -48,16 +48,12 @@ str.addEventListener("click", () => {
                     let iframe = document.querySelector('iframe');
                     let iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
 
+                    /* insert text and tracking on board page */
                     if (iframeDocument.querySelector("#tinymce") !== null) {
                         iframeDocument.querySelector("#tinymce").innerHTML = text_str;
-                        window.AJS.flag({
-                            type: 'success',
-                            title: 'Успіх',
-                            close: 'auto'
-                        });
                         iframeDocument.oninput = () => track(iframeDocument, getActiveTab());
                         /* КОСТИЛЬ може з цього зроблю окрему функцію*/
-                        document.querySelector('[data-mode="source"]').addEventListener('click', ()=>{
+                        document.querySelector('[data-mode="source"]').addEventListener('click', () => {
                             let getTextarea = document.querySelector("#description");
                             if (getTextarea != null) {
                                 getTextarea.oninput = () => track(getTextarea, getActiveTab());
@@ -69,11 +65,26 @@ str.addEventListener("click", () => {
                             }
                         })
                         /* КІНЕЦЬ КОСТИЛЯ*/
-                    } else {
+                    }
+                    /* insert text and tracking on another pages (last active field) */
+                    else {
                         let lastFocusedElement = document.activeElement;
                         let lastIframeDocument = lastFocusedElement.contentDocument || iframe.contentWindow.document;
                         lastIframeDocument.querySelector("#tinymce").innerHTML = text_str;
                         lastIframeDocument.oninput = () => track(lastIframeDocument, getActiveTab());
+                        /* КОСТИЛЬ може з цього зроблю окрему функцію*/
+                        document.querySelector('[data-mode="source"]').addEventListener('click', () => {
+                            let getTextarea = document.querySelector("#description");
+                            if (getTextarea != null) {
+                                getTextarea.oninput = () => track(getTextarea, getActiveTab());
+                                console.log(textarea_str);
+                            } else {
+                                let getCommentTextarea = document.querySelector("#comment");
+                                getCommentTextarea.oninput = () => track(getCommentTextarea, getActiveTab());
+                                console.log(textarea_str)
+                            }
+                        })
+                        /* КІНЕЦЬ КОСТИЛЯ*/
                     }
 
                 } else {
@@ -83,10 +94,16 @@ str.addEventListener("click", () => {
                         getTextarea.oninput = () => track(getTextarea, getActiveTab());
                         console.log(textarea_str);
                         /* КОСТИЛЬ*/
-                        document.querySelector('[data-mode="wysiwyg"]').addEventListener('click', ()=>{
-                            let iframe = document.querySelector('iframe');
-                            let iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-                            iframeDocument.oninput = () => track(iframeDocument, getActiveTab());
+                        document.querySelector('[data-mode="wysiwyg"]').addEventListener('click', () => {
+                            const interval = setInterval(() => {
+                                let iframe = document.querySelector('iframe');
+                                if (iframe) {
+                                    // Если элемент найден, выполняем код и очищаем интервал
+                                    let iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+                                    clearInterval(interval);
+                                    iframeDocument.oninput = () => track(iframeDocument, getActiveTab());
+                                }
+                            }, 1000);
                         })
                         /* КІНЕЦЬ КОСТИЛЯ*/
                     } else {
