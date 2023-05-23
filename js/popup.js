@@ -36,11 +36,11 @@ function switchTabToSourceAndTrack() {
     let getTextarea = document.querySelector("#description");
     if (getTextarea != null) {
         getTextarea.oninput = () => track(getTextarea, getActiveTab());
-        console.log(textarea_str);
+        console.log(getTextarea);
     } else {
         let getCommentTextarea = document.querySelector("#comment");
         getCommentTextarea.oninput = () => track(getCommentTextarea, getActiveTab());
-        console.log(textarea_str)
+        console.log(getCommentTextarea)
     }
 }
 
