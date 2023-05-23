@@ -58,7 +58,10 @@ The functionality helps to restore the last description of the bug report, which
 
 ## Usage
 
-To use the STR Extension, simply click on the extension icon in the browser toolbar. From there, users can choose to take insert description template or inserta latst description which has be saved
+To use the STR extension, simply click on the extension's icon in the browser toolbar. From there, users can choose to either insert a description template (if not inserted, first activate the description field by clicking on it and then select the template) or insert the last description that was saved.
+
+#### !IMPORTANT
+    Text tracking only works after the user selects a template from the popup
 
 ## Conclusion
 

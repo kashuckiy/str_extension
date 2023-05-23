@@ -22,7 +22,7 @@
         "run_at": "document_end"
       }
     ],
-    "permissions": ["activeTab", "scripting",  "storage"],
+    "permissions": ["activeTab", "scripting"],
     "host_permissions": [
       "https://jira.atlas-iac.org/*"
   ]
