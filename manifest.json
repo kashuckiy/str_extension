@@ -17,13 +17,13 @@
       {
         "js": ["js/popup.js", "js/texts.js"],
         "matches": [
-          "https://jira.atlas-iac.org/*"
+          "https://atlas-iac.atlassian.net/*"
         ],
         "run_at": "document_end"
       }
     ],
     "permissions": ["activeTab", "scripting"],
     "host_permissions": [
-      "https://jira.atlas-iac.org/*"
+      "https://atlas-iac.atlassian.net/*"
   ]
   }
